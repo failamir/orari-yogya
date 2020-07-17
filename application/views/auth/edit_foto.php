@@ -15,10 +15,10 @@
 		<!-- <hr />	  -->
     <div class="card-body">
     <div class="image float-right"><h5 class="card-title">Foto Profil Sebelumnya<hr></h5>
-          <!-- <img src="<?php echo base_url('resources');?>/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image"> -->
-          <img src="<?php if($user->foto != NULL){
-            echo base_url('assets/foto_profil/'.$user->foto.'');
-          }else{echo base_url('resources/dist/img/user-icon.png');} ?>" class="img-circle" style="width:250px;height:250px" alt="User Image">
+          <!-- <img src="<?php echo base_url('resources');?>/dist/img/usr2-160x160.jpg" class="img-circle elevation-2" alt="usr Image"> -->
+          <img src="<?php if($usr->foto != NULL){
+            echo base_url('assets/foto_profil/'.$usr->foto.'');
+          }else{echo base_url('assets/foto_profil/default.png');} ?>" class="img-circle" style="width:250px;height:250px" alt="usr Image">
         </div>
 		<!-- <?php echo form_open("auth/edit_foto_action","multipart");?> -->
     <form method="post" action="<?= site_url("auth/edit_foto_action") ?>" enctype="multipart/form-data">
@@ -26,12 +26,12 @@
             <input type="file" name="images">
 		</div>
 
-		<!-- <?php echo form_input($user->id);?> -->
-    <input type="hidden" name="id" value="<?= $user->id ?>">
+		<!-- <?php echo form_input($usr->id);?> -->
+    <input type="hidden" name="id" value="<?= $usr->id ?>">
 		<?php echo form_submit('submit', lang('change_password_submit_btn'),array('class'=>'btn btn-primary btn-flat'));?>
 	<?php echo form_close();?>
 		</div>
 	  </div>
-               
+               <!-- <?php var_dump($usr) ?> -->
     </section>
 	<!-- /.content -->

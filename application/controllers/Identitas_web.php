@@ -40,7 +40,18 @@ class Identitas_web extends CI_Controller
 			
 			
 		}
-    }		
+	}
+	
+	function upload_foto(){
+		$config['upload_path']          = './assets/foto_berita';
+		$config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
+		$config['max_size']             = 100000;
+		$config['max_width']            = 3024;
+		$config['max_height']           = 2768;
+		$this->load->library('upload', $config);
+		$this->upload->do_upload('gambar');
+		return $this->upload->data();
+	}
 	
 	public function get_Meta(){
 		

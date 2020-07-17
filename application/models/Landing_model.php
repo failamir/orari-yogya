@@ -15,16 +15,6 @@ class Landing_model extends CI_Model
         parent::__construct();
     }
 
-    // datatables
-    function json() {
-        $this->datatables->select('id,nama_perusahaan,deskripsi,tentang,visi,misi,juknsi,izin,alamat,email,telpon');
-        $this->datatables->from('landing');
-        //add this line for join
-        //$this->datatables->join('table2', 'landing.field = table2.field');
-        $this->datatables->add_column('action', anchor(site_url('landing/printing/$1'),'<i class = "fa fa-print"></i>', array('class'=>'btn btn-flat btn-success'))." ", 'id');
-        return $this->datatables->generate();
-    }
-
     // get all
     function get_all()
     {

@@ -1,49 +1,37 @@
-
-	  <div class="card-header">
-	  <h5 class="card-title"><?php echo $button ;?> Menu</h5>
-		
-		<div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
-                      <i class="fas fa-wrench"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" role="menu">
-                      <a href="#" class="dropdown-item">Action</a>
-                      <a href="#" class="dropdown-item">Another action</a>
-                      <a href="#" class="dropdown-item">Something else here</a>
-                      <a class="dropdown-divider"></a>
-                      <a href="#" class="dropdown-item">Separated link</a>
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-			  </div>
-			  <div class="card-body">
-			  <!-- Content Header (Page header) -->
-			  <section class="content-header">
-			   
-			  </section>
-			  <!-- Main content -->
-			  <section class="content">
-			  <?php if(isset($message)){   
-				   echo '<div class="alert alert-warning">  
-					 <a href="#" class="close" data-dismiss="alert">&times;</a>  
-					 '.$message.'
-				   </div> '; 
-			  }  ?>
-				<!-- Default box -->
-				<div class="box">	 
+ 
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>        
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><?php echo anchor('dashboard','<i class="fa fa-dashboard"></i> Beranda</a>')?></li>
+      </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+	<?php if(isset($message)){   
+		 echo '<div class="alert alert-warning">  
+		   <a href="#" class="close" data-dismiss="alert">&times;</a>  
+		   '.$message.'
+		 </div>';
+    }  ?>
+      <!-- Default box -->
+      <div class="box">
+        <div class="box-header">
+		 <h3 class="box-title"><?php echo $button ;?> Menu</h3>
+		<hr />	 
 		<?php echo form_open($action);?>
 	    <div class="form-group">
 				<?php 
 					echo form_label('Parent Menu');
 					echo form_error('parent_menu');
-					echo form_input($parent_menu);
+					$pilih_parent = array();					
+					foreach($get_parent as $data_parent)
+					{
+						$pilih_parent[$data_parent->id] = $data_parent->nama_menu;
+					}
+					echo form_dropdown($parent_menu,$pilih_parent,$parent_menu['value']);
 				?>				
 			</div>
 	    <div class="form-group">
@@ -61,7 +49,7 @@
 				?>				
 			</div>
 	    <div class="form-group">
-		<?php 
+				<?php 
 					echo form_label('Icon');
 					echo form_error('icon');
 					$pilih_icon = array(						
@@ -853,7 +841,7 @@
 						'fa-youtube-square' => '&#xf166; fa-youtube-square',
 					);
 					echo form_dropdown($icon,$pilih_icon,$icon['value']);
-				?>
+				?>				
 			</div>
 	    <div class="form-group">
 				<?php 
@@ -871,35 +859,34 @@
 			</div>
 	    <div class="form-group">
 				<?php 
-					echo form_label('Menu Grup User');
+					echo form_label('Menu Users');
 					echo form_error('menu_grup_user');
-					echo cmb_dinamis('menu_grup_user', 'groups', 'name', 'id');
+					$pilih_user = array();
+					foreach ($users as $user)
+					foreach ($user->groups as $group){
+						$pilih_user[$group->id] = $group->name;
+					}
+					echo form_dropdown($menu_grup_user,$pilih_user,$menu_grup_user['value']);
 				?>				
 			</div>
 	    <div class="form-group">
 				<?php 
 					echo form_label('Is Active');
 					echo form_error('is_active');
-					echo form_dropdown('is_active', array(
-						'1' => 'Aktif', 
-						'0' => 'Tidak Aktif',
-						
-					), '', array('class' => 'form-control'));
+					$aktif = array(
+						'1' => 'aktif',
+						'0' => 'nonaktif',
+					);
+					echo form_dropdown($is_active,$aktif,$is_active['value']);
 				?>				
 			</div>
 	    <?php 
-			echo form_input($id); ?>
-	<div class="card-footer">
-                <div class="row">
-	
-	<?php    	echo form_submit('submit', $button , array('class'=>'btn btn-flat btn-primary'));
-	        echo anchor('menu','Batal',array('class'=>'btn btn-flat btn-warning')); 
+			echo form_input($id);
+	    	echo form_submit('submit', $button , array('class'=>'btn btn-flat btn-primary'));
+	        echo anchor('menu','Batal',array('class'=>'btn btn-flat btn-default')); 
 						?>
 	<?php echo form_close();?>
-	</div>
-                <!-- /.row -->
-              </div>	
-	</div>
+		</div>
 	 </div>
                
     </section>

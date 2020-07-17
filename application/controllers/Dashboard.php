@@ -10,8 +10,7 @@ class Dashboard extends CI_Controller
 		$this->load->model('Identitas_web_model');
 		$this->load->library(array('ion_auth', 'form_validation'));
 		$this->load->helper(array('url', 'language'));
-		$this->load->model('m_grafik');
-		$this->load->model('chart_model');
+
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 
 		$this->lang->load('auth');
@@ -22,7 +21,7 @@ class Dashboard extends CI_Controller
 	 */
 	public function index()
 	{
-		
+
 		if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -38,16 +37,23 @@ class Dashboard extends CI_Controller
 			
 			$this->data['title'] = 'Beranda';
 			$this->get_Meta();
-
 			
-      		$data_api = $this->chart_model->get_data()->result();
-      		$this->data['data_morris'] = json_encode($data_api);
-			$this->data['data']=$this->m_grafik->get_data_stok();
-			$this->data['_view']='layouts/beranda';
+			$this->data['_view']='layouts/dashboard';
 			$this->_render_page('layouts/main', $this->data);
 		}
 	}
 	
+	function upload_foto(){
+		$config['upload_path']          = './assets/foto_berita';
+		$config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
+		$config['max_size']             = 100000;
+		$config['max_width']            = 3024;
+		$config['max_height']           = 2768;
+		$this->load->library('upload', $config);
+		$this->upload->do_upload('gambar');
+		return $this->upload->data();
+	}
+
 	public function get_Meta(){
 		
 		$rows = $this->Identitas_web_model->get_all();

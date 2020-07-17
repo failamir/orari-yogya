@@ -15,16 +15,6 @@ class Log_aktivitas_model extends CI_Model
         parent::__construct();
     }
 
-    // datatables
-    function json() {
-        $this->datatables->select('id,id_user,aktivitas,time');
-        $this->datatables->from('log_aktivitas');
-        //add this line for join
-        //$this->datatables->join('table2', 'log_aktivitas.field = table2.field');
-        $this->datatables->add_column('action', anchor(site_url('log_aktivitas/printing/$1'),'<i class = "fa fa-print"></i>', array('class'=>'btn btn-flat btn-success'))." ".anchor(site_url('log_aktivitas/read/$1'),'<i class = "fa fa-eye"></i>', array('class'=>'btn btn-flat btn-info'))." ".anchor(site_url('log_aktivitas/update/$1'),'<i class = "fa fa-edit"></i>', array('class'=>'btn btn-flat btn-warning'))." ".anchor(site_url('log_aktivitas/delete/$1'),'<i class = "fa fa-trash"></i>', array('class'=>'btn btn-flat btn-danger','onclick'=>'javasciprt: return confirm(\'Are You Sure ?\')')), 'id');
-        return $this->datatables->generate();
-    }
-
     // get all
     function get_all()
     {

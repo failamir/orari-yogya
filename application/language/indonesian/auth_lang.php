@@ -23,7 +23,7 @@ $lang['error_csrf'] = 'Form yang dikirim tidak lulus pemeriksaan keamanan kami.'
 
 // Login
 $lang['login_heading']         = 'Login';
-$lang['login_subheading']      = 'Silakan login dengan email/username dan password anda.';
+$lang['login_subheading']      = 'Silakan login dengan email dan password anda.';
 $lang['login_identity_label']  = 'Email/Username:';
 $lang['login_password_label']  = 'Kata Sandi:';
 $lang['login_remember_label']  = 'Ingatkan Saya';
@@ -56,11 +56,11 @@ $lang['deactivate_validation_user_id_label'] = 'ID Pengguna';
 // Create User
 $lang['create_user_heading']                           = 'Buat Pengguna';
 $lang['create_user_subheading']                        = 'Silakan masukan informasi Pengguna di bawah ini.';
-$lang['create_user_fname_label']                       = 'Nama Awal:';
+$lang['create_user_fname_label']                       = 'Nama :';
 $lang['create_user_lname_label']                       = 'Nama Akhir:';
 $lang['create_user_company_label']                     = 'Nama Perusahaan:';
 $lang['create_user_identity_label']                    = 'Identitas:';
-$lang['create_user_email_label']                       = 'Surel:';
+$lang['create_user_email_label']                       = 'Email:';
 $lang['create_user_phone_label']                       = 'Telepon:';
 $lang['create_user_password_label']                    = 'Kata Sandi:';
 $lang['create_user_password_confirm_label']            = 'Konfirmasi Kata Sandi:';
@@ -75,7 +75,7 @@ $lang['create_user_validation_password_label']         = 'Kata Sandi';
 $lang['create_user_validation_password_confirm_label'] = 'Konfirmasi Kata Sandi';
 
 // Edit User
-$lang['edit_user_heading']                           = 'Ubah Pengguna';
+$lang['edit_user_heading']                           = 'Profil Pengguna';
 $lang['edit_user_subheading']                        = 'Silakan masukan informasi Pengguna di bawah ini.';
 $lang['edit_user_fname_label']                       = 'Nama Awal:';
 $lang['edit_user_lname_label']                       = 'Nama Akhir:';

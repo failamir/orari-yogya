@@ -1,13 +1,13 @@
 
    <!-- Content Header (Page header) -->
-    <!-- <section class="content-header">
+    <section class="content-header">
       <h1>        
         <small></small>
       </h1>
       <ol class="breadcrumb">
         <li><?php echo anchor('dashboard','<i class="fa fa-dashboard"></i> Beranda</a>')?></li>
       </ol>
-    </section> -->
+    </section>
     <!-- Main content -->
     <section class="content">
 	<?php if(isset($message)){   
@@ -18,11 +18,10 @@
     }  ?>
 		
       <!-- Default box -->
-      
-        <div class="card-header">
-		 <h3 class="card-title">Detail Identitas Web</h3>
-  </div>
-  <div class="card-body">
+      <div class="box">
+        <div class="box-header">
+		 <h3 class="box-title">Detail Identitas Web</h3>
+		<hr />
 		<form class="form-horizontal">
               <div class="box-body">
                 <div class="form-group">

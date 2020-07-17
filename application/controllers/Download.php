@@ -9,15 +9,14 @@ class Download extends CI_Controller
     {
         parent::__construct();
 		$this->load->database();
-		$this->load->model(array('Download_model','Identitas_web_model'));
-		$this->load->model('Log_aktivitas_model');
+        $this->load->model(array('Download_model','Identitas_web_model'));
+        $this->load->model('Log_aktivitas_model');
         $this->load->library(array('ion_auth','form_validation'));
 		$this->load->helper(array('url', 'html'));
     }
 
     public function index()
     {
-        //fungsi untuk index (default dari setiap controller)
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
         
@@ -43,7 +42,6 @@ class Download extends CI_Controller
         $this->data['total_rows'] = $config['total_rows'];
         $this->data['start'] = $start;
 		
-		$this->data['user'] = $this->ion_auth->user()->row();
         $this->data['usr'] = $this->ion_auth->user()->row();
 		$this->data['message'] = $this->session->flashdata('message');
 		$this->data['title'] = 'download';
@@ -53,48 +51,8 @@ class Download extends CI_Controller
         $this->_render_page('layouts/main', $this->data);
     }
 
-    public function printing($id) 
-    {
-		//fungsi untuk printing halaman berisi data
-        if (!$this->ion_auth->logged_in())
-		{
-			// redirect them to the login page
-			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
-		{
-			// redirect them to the home page because they must be an administrator to view this
-			return show_error('Anda tidak punya akses di halaman ini');
-		}
-		else
-		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
-			
-			$row = $this->Download_model->get_by_id($id);
-			if ($row) {
-				$this->data['id'] = $this->form_validation->set_value('id',$row->id);
-				$this->data['callsign'] = $this->form_validation->set_value('callsign',$row->callsign);
-				$this->data['checkin'] = $this->form_validation->set_value('checkin',$row->checkin);
-				$this->data['kategori'] = $this->form_validation->set_value('kategori',$row->kategori);
-				$this->data['counter'] = $this->form_validation->set_value('counter',$row->counter);
-				$this->data['file'] = $this->form_validation->set_value('file',$row->file);
-				$this->data['status'] = $this->form_validation->set_value('status',$row->status);
-	    
-				$this->data['title'] = 'download';
-				$this->get_Meta();
-				$this->data['_view'] = 'download/download_print';
-				$this->_render_page('layouts/print',$this->data);
-			} else {
-				$this->data['message'] = 'Data tidak ditemukan';
-				redirect(site_url('download'));
-			}
-		}
-    }
-
     public function read($id) 
     {
-		//fungsi untuk melihat data
         if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -107,8 +65,7 @@ class Download extends CI_Controller
 		}
 		else
 		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
+			$this->data['usr'] = $this->ion_auth->user()->row();
 			
 			$row = $this->Download_model->get_by_id($id);
 			if ($row) {
@@ -125,7 +82,7 @@ class Download extends CI_Controller
 				$this->data['_view'] = 'download/download_read';
 				$this->_render_page('layouts/main',$this->data);
 			} else {
-				$this->data['message'] = 'Data tidak ditemukan';
+				$this->session->set_flashdata('message', 'Data tidak ditemukan');
 				redirect(site_url('download'));
 			}
 		}
@@ -133,7 +90,6 @@ class Download extends CI_Controller
 
     public function create() 
     {
-		//fungsi untuk menuju halaman create (tambah data)
         if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -146,14 +102,13 @@ class Download extends CI_Controller
 		}
 		else
 		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
+			$this->data['usr'] = $this->ion_auth->user()->row();
 			
 			$this->data['button'] = 'Tambah';
 			$this->data['action'] = site_url('download/create_action');
 		    $this->data['id'] = array(
 				'name'			=> 'id',
-				'type'			=> 'text',
+				'type'			=> 'hidden',
 				'value'			=> $this->form_validation->set_value('id'),
 				'class'			=> 'form-control',
 			);
@@ -180,7 +135,8 @@ class Download extends CI_Controller
 				'type'			=> 'text',
 				'value'			=> $this->form_validation->set_value('counter'),
 				'class'			=> 'form-control',
-				'readonly'		=> 'readonly',
+				'disabled'      => 'disabled',
+				'placeholder'   => '1',
 			);
 		    $this->data['file'] = array(
 				'name'			=> 'file',
@@ -204,10 +160,9 @@ class Download extends CI_Controller
     
     public function create_action() 
     {
-		//fungsi untuk aksi menambah data ke database
         // $this->_rules();
 
-		$file = $this->upload_file();
+        $file = $this->upload_file();
 		if($file['file_name']==''){
 			$data = array(
 		'file'      => 'default.pdf',
@@ -228,7 +183,7 @@ class Download extends CI_Controller
 			);
 	}
 			$this->Download_model->insert($data);
-			$temp = $this->ion_auth->user()->row();
+            $temp = $this->ion_auth->user()->row();
 			$id = $temp->id;
 			$nama = $temp->first_name;
 			$aktivitas = $nama ." telah menambah data pada download";
@@ -240,14 +195,12 @@ class Download extends CI_Controller
 			);
 			$this->Log_aktivitas_model->insert($data_log);
             $this->session->set_flashdata('message', 'Data berhasil ditambahkan');
-			redirect(site_url('download'),'refresh');
-			// var_dump($data);
+            redirect(site_url('download'),'refresh');
         // }
     }
     
     public function update($id) 
     {
-		//fungsi untuk menuju halaman edit data
         if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -260,8 +213,7 @@ class Download extends CI_Controller
 		}
 		else
 		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
+			$this->data['usr'] = $this->ion_auth->user()->row();
 			
 			$row = $this->Download_model->get_by_id($id);
 
@@ -270,7 +222,7 @@ class Download extends CI_Controller
 				$this->data['action']		= site_url('download/update_action');
 			    $this->data['id'] = array(
 					'name'			=> 'id',
-					'type'			=> 'text',
+					'type'			=> 'hidden',
 					'value'			=> $this->form_validation->set_value('id', $row->id),
 					'class'			=> 'form-control',
 				);
@@ -282,7 +234,7 @@ class Download extends CI_Controller
 				);
 			    $this->data['checkin'] = array(
 					'name'			=> 'checkin',
-					'type'			=> 'text',
+					'type'			=> 'date',
 					'value'			=> $this->form_validation->set_value('checkin', $row->checkin),
 					'class'			=> 'form-control',
 				);
@@ -317,20 +269,19 @@ class Download extends CI_Controller
 				$this->_render_page('layouts/main',$this->data);
 			} else {
 				$this->session->set_flashdata('message', 'Data tidak ditemukan');
-            redirect(site_url('download'),'refresh');
+				redirect(site_url('download'));
 			}
 		}
     }
     
     public function update_action() 
     {
-		//fungsi untuk aksi merubah isi data pada database
         // $this->_rules();
 
-		$file = $this->upload_file();
+        $file = $this->upload_file();
 		if($file['file_name']==''){
 			$data = array(
-		'file'      => 'default.pdf',
+		// 'file'      => 'default.pdf',
 		'callsign' 			=> $this->input->post('callsign',TRUE),
 		'checkin' 			=> $this->input->post('checkin',TRUE),
 		'kategori' 			=> $this->input->post('kategori',TRUE),
@@ -349,7 +300,7 @@ class Download extends CI_Controller
 	}
 
 			$this->Download_model->update($this->input->post('id', TRUE), $data);
-			$temp = $this->ion_auth->user()->row();
+            $temp = $this->ion_auth->user()->row();
 			$id = $temp->id;
 			$nama = $temp->first_name;
 			$aktivitas = $nama . " telah mengubah data pada download";
@@ -362,35 +313,16 @@ class Download extends CI_Controller
 			$this->Log_aktivitas_model->insert($data_log);
             $this->session->set_flashdata('message', 'Data berhasil diubah');
             redirect(site_url('download'),'refresh');
-        
+        // }
     }
-	
-	public function count($id,$file) 
-    {
-		//fungsi untuk aksi merubah isi data pada database
-        // $this->_rules();
-		$id_terbaru = $this->Download_model->get_by_id($id);
-		// var_dump($id_terbaru);
-		$idnya = $id_terbaru->counter + 1;
-			$data = array(
-		'counter' 			=> $idnya,
-		);
-			$this->Download_model->update($id, $data);
-			redirect(base_url().'./assets/file/'.$file,'refresh');
-			$zul = './assets/file/'.$file;
-			var_dump($zul);
-	
-	}
-
-	
+    
     public function delete($id) 
     {
-		//fungsi untuk menghapus isi data pada database
         $row = $this->Download_model->get_by_id($id);
 
         if ($row) {
-			$this->Download_model->delete($id);
-			$temp = $this->ion_auth->user()->row();
+            $this->Download_model->delete($id);
+            $temp = $this->ion_auth->user()->row();
 			$id = $temp->id;
 			$nama = $temp->first_name;
 			$waktu = date('d-m-Y H:i:s');
@@ -410,7 +342,7 @@ class Download extends CI_Controller
     }
 	
 	public function get_Meta(){
-		//fungsi untuk mendapatkan data meta web
+		
 		$rows = $this->Identitas_web_model->get_all();
 		foreach ($rows as $row) {			
 			$this->data['web_name'] 		= $this->form_validation->set_value('nama_web',$row->nama_web);
@@ -423,7 +355,7 @@ class Download extends CI_Controller
 	
 	public function _render_page($view, $data = NULL, $returnhtml = FALSE)//I think this makes more sense
 	{
-		//fungsi untuk merender view dan page menjadi satu halaman utuh
+
 		$this->viewdata = (empty($data)) ? $this->data : $data;
 
 		$view_html = $this->load->view($view, $this->viewdata, $returnhtml);
@@ -433,10 +365,10 @@ class Download extends CI_Controller
 		{
 			return $view_html;
 		}
-	}
-	
-	/*
-	public function edit_foto_action()
+    }
+    
+    /*
+    public function edit_foto_action()
 	{
 	$foto = $this->upload_foto();
 		if($foto['file_name']==''){
@@ -454,21 +386,33 @@ class Download extends CI_Controller
 		// var_dump($data);
 		redirect(site_url());
 	}
-*/
+	*/
+	
+		function upload_foto(){
+			$config['upload_path']          = './assets/foto_';
+			$config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
+			$config['max_size']             = 100000;
+			$config['max_width']            = 4024;
+			$config['max_height']           = 3368;
+			$this->load->library('upload', $config);
+			$this->upload->do_upload('images');
+			return $this->upload->data();
+		}
+
 		function upload_file(){
 			$config['upload_path']          = './assets/file';
 			$config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
-			// $config['max_size']             = 1000;
-			// $config['max_width']            = 1024;
-			// $config['max_height']           = 768;
+			$config['max_size']             = 100000;
+			// $config['max_width']            = 4024;
+			// $config['max_height']           = 3368;
 			$this->load->library('upload', $config);
 			$this->upload->do_upload('file');
 			return $this->upload->data();
 		}
 	
+	
     public function _rules() 
     {
-		//fungsi untuk menetapkan rules untuk setiap field
 	$this->form_validation->set_rules('callsign', 'callsign', 'trim|required');
 	$this->form_validation->set_rules('checkin', 'checkin', 'trim|required');
 	$this->form_validation->set_rules('kategori', 'kategori', 'trim|required');
@@ -482,18 +426,6 @@ class Download extends CI_Controller
 
     public function excel()
     {
-		//fungsi untuk mencetak file excel
-		$temp = $this->ion_auth->user()->row();
-			$id = $temp->id;
-			$nama = $temp->first_name;
-			$waktu = date('d-m-Y H:i:s');
-			$aktivitas = $nama ." telah mengunduh data pada  format excel";
-			$data_log = array(
-				'id_user' => $id,
-				'aktivitas' => $aktivitas,
-				'time' => $waktu, 
-			);
-			$this->Log_aktivitas_model->insert($data_log);
         $this->load->helper('exportexcel');
         $namaFile = "download.xls";
         $judul = "download";
@@ -543,18 +475,6 @@ class Download extends CI_Controller
 
     public function word()
     {
-		//fungsi untuk mencetak file word document
-		$temp = $this->ion_auth->user()->row();
-			$id = $temp->id;
-			$nama = $temp->first_name;
-		$waktu = date('d-m-Y H:i:s');
-		$aktivitas = $nama . " telah mengunduh data pada  format word";
-		$data_log = array(
-			'id_user' => $id,
-			'aktivitas' => $aktivitas,
-			'time' => $waktu, 
-		);
-		$this->Log_aktivitas_model->insert($data_log);
         header("Content-type: application/vnd.ms-word");
         header("Content-Disposition: attachment;Filename=download.doc");
 
@@ -564,6 +484,21 @@ class Download extends CI_Controller
         );
         
         $this->load->view('download/download_doc',$data);
+    }
+
+    function pdf()
+    {
+        $data = array(
+            'download_data' => $this->Download_model->get_all(),
+            'start' => 0
+        );
+        
+        ini_set('memory_limit', '32M');
+        $html = $this->load->view('download/download_pdf', $data, true);
+        $this->load->library('pdf');
+        $pdf = $this->pdf->load();
+        $pdf->WriteHTML($html);
+        $pdf->Output('download.pdf', 'D'); 
     }
 
 }

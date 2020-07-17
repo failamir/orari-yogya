@@ -20,8 +20,11 @@
         <table class="word-table" style="margin-bottom: 10px">
             <tr>
                 <th>No</th>
-		<th>Nama</th>
-		<th>Nama File</th>
+		<th>Callsign</th>
+		<th>Checkin</th>
+		<th>Kategori</th>
+		<th>Counter</th>
+		<th>File</th>
 		<th>Status</th>
 		
             </tr><?php
@@ -30,8 +33,11 @@
                 ?>
                 <tr>
 		      <td><?php echo ++$start ?></td>
-		      <td><?php echo $download->nama ?></td>
-		      <td><?php echo $download->nama_file ?></td>
+		      <td><?php echo $download->callsign ?></td>
+		      <td><?php echo $download->checkin ?></td>
+		      <td><?php echo $download->kategori ?></td>
+		      <td><?php echo $download->counter ?></td>
+		      <td><?php echo $download->file ?></td>
 		      <td><?php echo $download->status ?></td>	
                 </tr>
                 <?php

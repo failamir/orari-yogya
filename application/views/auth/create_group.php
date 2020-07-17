@@ -5,7 +5,9 @@
         <?php echo lang('create_group_heading');?>
         <small><?php echo lang('create_group_subheading');?></small>
       </h1>
-      
+      <ol class="breadcrumb">
+        <li><?php echo anchor('dashboard','<i class="fa fa-dashboard"></i> Beranda</a>')?></li>
+      </ol>
     </section>
     <!-- Main content -->
     <section class="content">
@@ -17,7 +19,7 @@
     }  ?>
       <!-- Default box -->
       <div class="box">
-        <div class="card-header">
+        <div class="box-header">
 		 <h3 class="box-title"></h3>
 		<hr />	 
 			<?php echo form_open("auth/create_group");?>

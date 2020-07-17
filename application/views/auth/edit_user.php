@@ -1,4 +1,14 @@
 
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+	   <?php echo lang('edit_user_heading');?></h1>
+        <small><?php echo lang('edit_user_subheading');?></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><?php echo anchor('dashboard','<i class="fa fa-dashboard"></i> Beranda</a>')?></li>
+      </ol>
+    </section>
     <!-- Main content -->
     <section class="content">
 	<?php if(isset($message)){   
@@ -8,14 +18,10 @@
 		 </div> '; 
     }  ?>
       <!-- Default box -->
-
-        <div class="card-header">
-		 <h5 class="box-title">   
-	   <?php echo lang('edit_user_heading');?>
-        <small><?php echo lang('edit_user_subheading');?></small>
-      </h5>
-	  </div>
-	  <div class="card-body">
+      <div class="box">
+        <div class="box-header">
+		 <h3 class="box-title"></h3>
+		<hr />	 
 		<?php echo form_open(uri_string());?>
 
 		  <div class="form-group">
@@ -82,4 +88,3 @@
                
     </section>
 	<!-- /.content -->
-</div>

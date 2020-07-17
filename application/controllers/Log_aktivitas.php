@@ -9,76 +9,46 @@ class Log_aktivitas extends CI_Controller
     {
         parent::__construct();
 		$this->load->database();
-		$this->load->model(array('Log_aktivitas_model','Identitas_web_model'));
-		$this->load->model('Log_aktivitas_model');
+        $this->load->model(array('Log_aktivitas_model','Identitas_web_model'));
+        $this->load->model('Log_aktivitas_model');
         $this->load->library(array('ion_auth','form_validation'));
-		$this->load->helper(array('url', 'html'));        
-				$this->load->library('datatables');
+		$this->load->helper(array('url', 'html'));
     }
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in())
-		{
-			// redirect them to the login page
-			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
-		{
-			// redirect them to the home page because they must be an administrator to view this
-			return show_error('Anda tidak punya akses di halaman ini');
-		}
-		else
-		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
-			$this->data['message'] = $this->session->flashdata('message');
-			$this->data['title'] = 'log_aktivitas';
-			$this->get_Meta();
-			
-			$this->data['_view']='log_aktivitas/log_aktivitas_list';
-			$this->_render_page('layouts/main',$this->data);
-		}
-    } 
-    
-    public function json() {
-        header('Content-Type: application/json');
-        echo $this->Log_aktivitas_model->json();
-    }
+        $q = urldecode($this->input->get('q', TRUE));
+        $start = intval($this->input->get('start'));
+        
+        if ($q <> '') {
+            $config['base_url'] = base_url() . 'log_aktivitas/?q=' . urlencode($q);
+            $config['first_url'] = base_url() . 'log_aktivitas/?q=' . urlencode($q);
+        } else {
+            $config['base_url'] = base_url() . 'log_aktivitas/';
+            $config['first_url'] = base_url() . 'log_aktivitas/';
+        }
 
-    public function printing($id) 
-    {
-        if (!$this->ion_auth->logged_in())
-		{
-			// redirect them to the login page
-			redirect('auth/login', 'refresh');
-		}
-		else if (!$this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
-		{
-			// redirect them to the home page because they must be an administrator to view this
-			return show_error('Anda tidak punya akses di halaman ini');
-		}
-		else
-		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
+        $config['per_page'] = 10;
+        $config['page_query_string'] = TRUE;
+        $config['total_rows'] = $this->Log_aktivitas_model->total_rows($q);
+        $log_aktivitas = $this->Log_aktivitas_model->get_limit_data($config['per_page'], $start, $q);
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+            
+        $this->data['log_aktivitas_data'] = $log_aktivitas;
+        $this->data['q'] = $q;
+        $this->data['pagination'] = $this->pagination->create_links();
+        $this->data['total_rows'] = $config['total_rows'];
+        $this->data['start'] = $start;
+		
+        $this->data['usr'] = $this->ion_auth->user()->row();
+		$this->data['message'] = $this->session->flashdata('message');
+		$this->data['title'] = 'log_aktivitas';
+		$this->get_Meta();
 			
-			$row = $this->Log_aktivitas_model->get_by_id($id);
-			if ($row) {
-				$this->data['id'] = $this->form_validation->set_value('id',$row->id);
-				$this->data['id_user'] = $this->form_validation->set_value('id_user',$row->id_user);
-				$this->data['aktivitas'] = $this->form_validation->set_value('aktivitas',$row->aktivitas);
-				$this->data['time'] = $this->form_validation->set_value('time',$row->time);
-	    
-				$this->data['title'] = 'log_aktivitas';
-				$this->get_Meta();
-				$this->data['_view'] = 'log_aktivitas/log_aktivitas_print';
-				$this->_render_page('layouts/print',$this->data);
-			} else {
-				$this->data['message'] = 'Data tidak ditemukan';
-				redirect(site_url('log_aktivitas'));
-			}
-		}
+        $this->data['_view'] = 'log_aktivitas/log_aktivitas_list';
+        $this->_render_page('layouts/main', $this->data);
     }
 
     public function read($id) 
@@ -95,8 +65,7 @@ class Log_aktivitas extends CI_Controller
 		}
 		else
 		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
+			$this->data['usr'] = $this->ion_auth->user()->row();
 			
 			$row = $this->Log_aktivitas_model->get_by_id($id);
 			if ($row) {
@@ -110,7 +79,7 @@ class Log_aktivitas extends CI_Controller
 				$this->data['_view'] = 'log_aktivitas/log_aktivitas_read';
 				$this->_render_page('layouts/main',$this->data);
 			} else {
-				$this->data['message'] = 'Data tidak ditemukan';
+				$this->session->set_flashdata('message', 'Data tidak ditemukan');
 				redirect(site_url('log_aktivitas'));
 			}
 		}
@@ -130,8 +99,7 @@ class Log_aktivitas extends CI_Controller
 		}
 		else
 		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
+			$this->data['usr'] = $this->ion_auth->user()->row();
 			
 			$this->data['button'] = 'Tambah';
 			$this->data['action'] = site_url('log_aktivitas/create_action');
@@ -180,8 +148,8 @@ class Log_aktivitas extends CI_Controller
 		'time' 			=> $this->input->post('time',TRUE),
 	    );
 
-			$this->Log_aktivitas_model->insert($data);
-			$temp = $this->ion_auth->user()->row();
+            $this->Log_aktivitas_model->insert($data);
+            $temp = $this->ion_auth->user()->row();
 			$id = $temp->id;
 			$nama = $temp->first_name;
 			$aktivitas = $nama ." telah menambah data pada log_aktivitas";
@@ -211,8 +179,7 @@ class Log_aktivitas extends CI_Controller
 		}
 		else
 		{
-			$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
+			$this->data['usr'] = $this->ion_auth->user()->row();
 			
 			$row = $this->Log_aktivitas_model->get_by_id($id);
 
@@ -250,7 +217,7 @@ class Log_aktivitas extends CI_Controller
 				$this->_render_page('layouts/main',$this->data);
 			} else {
 				$this->session->set_flashdata('message', 'Data tidak ditemukan');
-            redirect(site_url('log_aktivitas'),'refresh');
+				redirect(site_url('log_aktivitas'));
 			}
 		}
     }
@@ -268,8 +235,8 @@ class Log_aktivitas extends CI_Controller
 			'time' 					=> $this->input->post('time',TRUE),
 	    );
 
-			$this->Log_aktivitas_model->update($this->input->post('id', TRUE), $data);
-			$temp = $this->ion_auth->user()->row();
+            $this->Log_aktivitas_model->update($this->input->post('id', TRUE), $data);
+            $temp = $this->ion_auth->user()->row();
 			$id = $temp->id;
 			$nama = $temp->first_name;
 			$aktivitas = $nama . " telah mengubah data pada log_aktivitas";
@@ -290,8 +257,8 @@ class Log_aktivitas extends CI_Controller
         $row = $this->Log_aktivitas_model->get_by_id($id);
 
         if ($row) {
-			$this->Log_aktivitas_model->delete($id);
-			$temp = $this->ion_auth->user()->row();
+            $this->Log_aktivitas_model->delete($id);
+            $temp = $this->ion_auth->user()->row();
 			$id = $temp->id;
 			$nama = $temp->first_name;
 			$waktu = date('d-m-Y H:i:s');
@@ -334,7 +301,51 @@ class Log_aktivitas extends CI_Controller
 		{
 			return $view_html;
 		}
+    }
+    
+    /*
+    public function edit_foto_action()
+	{
+	$foto = $this->upload_foto();
+		if($foto['file_name']==''){
+			$data = array(
+		'foto'      => 'default.jpg');
+		}else{
+			$data = array(
+			'foto'        =>$foto['file_name'],);
+			// ubah foto profil yang aktif
+			// $this->session->set_userdata('foto',$foto['file_name']);
+		}
+		$this->Users_model->update($this->input->post('id', TRUE), $data);
+		$this->session->set_flashdata('message', 'Update Foto profil Success');
+		// var_dump($this->input->post('id'));
+		// var_dump($data);
+		redirect(site_url());
 	}
+	*/
+	/*
+		function upload_foto(){
+			$config['upload_path']          = './assets/foto_';
+			$config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
+			$config['max_size']             = 100000;
+			$config['max_width']            = 4024;
+			$config['max_height']           = 3368;
+			$this->load->library('upload', $config);
+			$this->upload->do_upload('images');
+			return $this->upload->data();
+		}
+
+		function upload_file(){
+			$config['upload_path']          = './assets/file';
+			$config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
+			$config['max_size']             = 100000;
+			// $config['max_width']            = 4024;
+			// $config['max_height']           = 3368;
+			$this->load->library('upload', $config);
+			$this->upload->do_upload('file');
+			return $this->upload->data();
+		}
+	*/
 	
     public function _rules() 
     {
@@ -348,17 +359,6 @@ class Log_aktivitas extends CI_Controller
 
     public function excel()
     {
-		$temp = $this->ion_auth->user()->row();
-			$id = $temp->id;
-			$nama = $temp->first_name;
-			$waktu = date('d-m-Y H:i:s');
-			$aktivitas = $nama ." telah mengunduh data pada  format excel";
-			$data_log = array(
-				'id_user' => $id,
-				'aktivitas' => $aktivitas,
-				'time' => $waktu, 
-			);
-			$this->Log_aktivitas_model->insert($data_log);
         $this->load->helper('exportexcel');
         $namaFile = "log_aktivitas.xls";
         $judul = "log_aktivitas";
@@ -402,17 +402,6 @@ class Log_aktivitas extends CI_Controller
 
     public function word()
     {
-		$temp = $this->ion_auth->user()->row();
-			$id = $temp->id;
-			$nama = $temp->first_name;
-		$waktu = date('d-m-Y H:i:s');
-		$aktivitas = $nama . " telah mengunduh data pada  format word";
-		$data_log = array(
-			'id_user' => $id,
-			'aktivitas' => $aktivitas,
-			'time' => $waktu, 
-		);
-		$this->Log_aktivitas_model->insert($data_log);
         header("Content-type: application/vnd.ms-word");
         header("Content-Disposition: attachment;Filename=log_aktivitas.doc");
 
@@ -426,18 +415,6 @@ class Log_aktivitas extends CI_Controller
 
     function pdf()
     {
-		$temp = $this->ion_auth->user()->row();
-			$id = $temp->id;
-			$nama = $temp->first_name;
-		$waktu = date('d-m-Y H:i:s');
-		$aktivitas = $nama ." telah mengunduh data pada  format pdf";
-		$data_log = array(
-			'id_user' => $id,
-			'aktivitas' => $aktivitas,
-			'time' => $waktu, 
-		);
-		$this->Log_aktivitas_model->insert($data_log);
-
         $data = array(
             'log_aktivitas_data' => $this->Log_aktivitas_model->get_all(),
             'start' => 0

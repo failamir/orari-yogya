@@ -32,14 +32,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition login-page">
-<div class="card card-warning">
-  <div class="card-header">
-    <h2 class="center"><?php echo lang('login_heading');?></h2>
+<div class="login-box">
+  <div class="login-logo">
+    <b><?php echo lang('login_heading');?> ORARI</b>
   </div>
   <!-- /.login-logo -->
-  <div class="card-body">
-    <h6 style="margin-left:25px;margin-right:25px;margin-bottom:25px"><?php echo lang('login_subheading');?></h6>
-    
+  <div class="login-box-body">
+    <p class="login-box-msg"><?php echo lang('login_subheading');?></p>
 	<?php if(isset($message)){   
 		 echo '<div class="alert alert-warning">  
 		   <a href="#" class="close" data-dismiss="alert">&times;</a>  
@@ -47,35 +46,33 @@
 		 </div> '; 
     }  ?>
     <?php echo form_open("auth/login");?>
-      <div class="form-group has-feedback col-md-12">
+      <div class="form-group has-feedback">
         <?php echo lang('login_identity_label', 'identity');?>
 		<?php echo form_input($identity);?>
-        <!-- <span class="glyphicon glyphicon-envelope form-control-feedback"></span> -->
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
-      <div class="form-group has-feedback col-md-12">
+      <div class="form-group has-feedback">
         <?php echo lang('login_password_label', 'password');?>
 		<?php echo form_input($password);?>
-        <!-- <span class="glyphicon glyphicon-lock form-control-feedback"></span> -->
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
         <div class="col-xs-8">
           <div class="checkbox icheck">
-            <?php echo form_checkbox('remember', '1', FALSE, 'id="remember"');?>
-			<?php echo lang('login_remember_label', 'remember');?>			
+            <!--<?php echo form_checkbox('remember', '1', FALSE, 'id="remember"');?>-->
+			<!--<?php echo lang('login_remember_label', 'remember');?>			-->
           </div>
         </div>
         <!-- /.col -->
-        <div class="float-right" style="margin-left:250px">
         <div class="col-xs-4">
           <?php echo form_submit('submit', lang('login_submit_btn'),array('class'=>'btn btn-flat btn-block btn-primary'));?>
-        </div>
         </div>
         <!-- /.col -->
       </div>
     <?php echo form_close();?>
 
     <!-- <div class="social-auth-links text-center">
-      <h3>- OR -</h3>
+      <p>- OR -</p>
       <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using
         Facebook</a>
       <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using
@@ -83,8 +80,8 @@
     </div> -->
     <!-- /.social-auth-links -->
 
-    <a href="forgot_password"><?php echo lang('login_forgot_password');?></a><br>
-    <a href="register.html" class="text-center">Register a new membership</a>
+    <!--<a href="forgot_password"><?php echo lang('login_forgot_password');?></a><br>-->
+    <!--<a href="register.html" class="text-center">Register a new membership</a>-->
 
   </div>
   <!-- /.login-box-body -->

@@ -20,7 +20,7 @@
 	    <tr><td>Id User</td><td><?php echo $id_user; ?></td></tr>
 	    <tr><td>Aktivitas</td><td><?php echo $aktivitas; ?></td></tr>
 	    <tr><td>Time</td><td><?php echo $time; ?></td></tr>
-	    <tr><td></td><td><a href="<?php echo site_url('log_aktivitas') ?>" class="btn btn-flat btn-warning">Kembali</a></td></tr>
+	    <tr><td></td><td><a href="<?php echo site_url('log_aktivitas') ?>" class="btn btn-flat btn-warning no-print">Kembali</a></td></tr>
 	</table>
         </div>
 	 </div>

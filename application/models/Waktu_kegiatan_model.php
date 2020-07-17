@@ -15,22 +15,12 @@ class Waktu_kegiatan_model extends CI_Model
         parent::__construct();
     }
 
-    // datatables
-    function json() {
-        $this->datatables->select('id,id_tanggal,mulai,selesai,detail');
-        $this->datatables->from('waktu_kegiatan');
-        //add this line for join
-        //$this->datatables->join('table2', 'waktu_kegiatan.field = table2.field');
-        $this->datatables->add_column('action', anchor(site_url('waktu_kegiatan/printing/$1'),'<i class = "fa fa-print"></i>', array('class'=>'btn btn-flat btn-success'))." ".anchor(site_url('waktu_kegiatan/read/$1'),'<i class = "fa fa-eye"></i>', array('class'=>'btn btn-flat btn-info'))." ".anchor(site_url('waktu_kegiatan/update/$1'),'<i class = "fa fa-edit"></i>', array('class'=>'btn btn-flat btn-warning'))." ".anchor(site_url('waktu_kegiatan/delete/$1'),'<i class = "fa fa-trash"></i>', array('class'=>'btn btn-flat btn-danger','onclick'=>'javasciprt: return confirm(\'Are You Sure ?\')')), 'id');
-        return $this->datatables->generate();
-    }
-
     function get_join()
     {
         $this->db->select('*');
-$this->db->from('waktu_kegiatan');
-$this->db->join('tanggal_kegiatan', 'tanggal_kegiatan.id = waktu_kegiatan.id');
-return $this->db->get()->result();
+        $this->db->from('waktu_kegiatan');
+        $this->db->join('tanggal_kegiatan', 'tanggal_kegiatan.id = waktu_kegiatan.id');
+        return $this->db->get()->result();
     }
 
     // get all

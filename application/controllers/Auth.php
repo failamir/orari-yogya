@@ -19,7 +19,6 @@ class Auth extends CI_Controller
 
 		$this->lang->load('auth');
 		$this->load->model('Identitas_web_model');
-		$this->load->model('Users_model');
 	}
 
 	/**
@@ -57,6 +56,49 @@ class Auth extends CI_Controller
 			
 			$this->_render_page('layouts/main', $this->data);
 		}
+	}
+
+	public function edit_foto()
+	{
+			$this->data['user'] = $this->ion_auth->user()->row();
+            $this->data['usr'] = $this->ion_auth->user()->row();
+			$this->data['title'] = 'Ganti Foto Profil';
+			$this->get_Meta();
+			
+			$this->data['_view'] = 'auth/edit_foto';
+			$this->_render_page('layouts/main', $this->data);
+
+	}
+
+	public function edit_foto_action()
+	{
+		$foto = $this->upload_foto();
+		if($foto['file_name']==''){
+			$data = array(
+		'foto'      => 'default.jpg');
+		}else{
+			$data = array(
+			'foto'        =>$foto['file_name'],);
+			// ubah foto profil yang aktif
+			// $this->session->set_userdata('foto',$foto['file_name']);
+		}
+
+		$this->Users_model->update($this->input->post('id', TRUE), $data);
+		$this->session->set_flashdata('message', 'Update Foto profil Success');
+		// var_dump($this->input->post('id'));
+		// var_dump($data);
+		redirect(site_url());
+	}
+
+	function upload_foto(){
+        $config['upload_path']          = './assets/foto_profil';
+        $config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
+        $config['max_size']             = 100000;
+		$config['max_width']            = 3024;
+		$config['max_height']           = 2768;
+        $this->load->library('upload', $config);
+        $this->upload->do_upload('images');
+        return $this->upload->data();
 	}
 	
 	public function get_Meta(){
@@ -529,7 +571,7 @@ class Auth extends CI_Controller
 			// check to see if we are creating the user
 			// redirect them back to the admin page
 			$this->session->set_flashdata('message', $this->ion_auth->messages());
-			redirect(site_url('auth'), 'refresh');
+			redirect("auth", 'refresh');
 		}
 		else
 		{
@@ -762,49 +804,6 @@ class Auth extends CI_Controller
 		$this->_render_page('layouts/main', $this->data);
 	}
 
-	public function edit_foto()
-	{
-		$this->data['user'] = $this->ion_auth->user()->row();
-            $this->data['usr'] = $this->ion_auth->user()->row();
-			$this->data['title'] = 'Ganti Foto Profil';
-			$this->get_Meta();
-			
-			$this->data['_view'] = 'auth/edit_foto';
-			$this->_render_page('layouts/main', $this->data);
-
-	}
-
-	public function edit_foto_action()
-	{
-		$foto = $this->upload_foto();
-		if($foto['file_name']==''){
-			$data = array(
-		'foto'      => 'default.jpg');
-		}else{
-			$data = array(
-			'foto'        =>$foto['file_name'],);
-			// ubah foto profil yang aktif
-			// $this->session->set_userdata('foto',$foto['file_name']);
-		}
-
-		$this->Users_model->update($this->input->post('id', TRUE), $data);
-		$this->session->set_flashdata('message', 'Update Foto profil Success');
-		// var_dump($this->input->post('id'));
-		// var_dump($data);
-		redirect(site_url());
-	}
-
-	function upload_foto(){
-        $config['upload_path']          = './assets/foto_profil';
-        $config['allowed_types']        = 'gif|jpg|png|jpeg|webp|tiff|pdf|zip|rar|doc|docx|xls|xlsx';
-        // $config['max_size']             = 1000;
-        // $config['max_width']            = 1024;
-        // $config['max_height']           = 768;
-        $this->load->library('upload', $config);
-        $this->upload->do_upload('images');
-        return $this->upload->data();
-	}
-	
 	/**
 	 * Create a new group
 	 */

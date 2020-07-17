@@ -1,46 +1,26 @@
-
-	 <!-- <script src="https://cdn.tiny.cloud/1/t4g9b5tsx6fq7gwinyh9j4hsgzdpn5stgvph899qokjbcu5t/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script> -->
-	 <!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script> -->
-  <script>tinymce.init({selector:'textarea'});</script> 
-	  <div class="card-header">
-	  <h5 class="card-title"><?php echo $button ;?> Landing</h5>
-		
-		<div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
-                      <i class="fas fa-wrench"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" role="menu">
-                      <a href="#" class="dropdown-item">Action</a>
-                      <a href="#" class="dropdown-item">Another action</a>
-                      <a href="#" class="dropdown-item">Something else here</a>
-                      <a class="dropdown-divider"></a>
-                      <a href="#" class="dropdown-item">Separated link</a>
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-			  </div>
-			  <div class="card-body">
-			  <!-- Content Header (Page header) -->
-			  <section class="content-header">
-			   
-			  </section>
-			  <!-- Main content -->
-			  <section class="content">
-			  <?php if(isset($message)){   
-				   echo '<div class="alert alert-warning">  
-					 <a href="#" class="close" data-dismiss="alert">&times;</a>  
-					 '.$message.'
-				   </div> '; 
-			  }  ?>
-				<!-- Default box -->
-				<div class="box">	 
+ 
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>        
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><?php echo anchor('dashboard','<i class="fa fa-dashboard"></i> Beranda</a>')?></li>
+      </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+	<?php if(isset($message)){   
+		 echo '<div class="alert alert-warning">  
+		   <a href="#" class="close" data-dismiss="alert">&times;</a>  
+		   '.$message.'
+		 </div> '; 
+    }  ?>
+      <!-- Default box -->
+      <div class="box">
+        <div class="box-header">
+		 <h3 class="box-title"><?php echo $button ;?> Landing</h3>
+		<hr />	 
 		<?php echo form_open_multipart($action);?>
 	    <div class="form-group">
 				<?php 
@@ -112,19 +92,27 @@
 					echo form_input($telpon);
 				?>				
 			</div>
+			<div class="form-group">
+				<?php 
+					echo form_label('Gambar bagian About');
+					echo form_error('img_about');
+					echo form_input($img_about);
+				?>				
+			</div>
+			<div class="form-group">
+				<?php 
+					echo form_label('Link video profil');
+					echo form_error('link_video');
+					echo form_input($link_video);
+				?>				
+			</div>
 	    <?php 
-			echo form_input($id); ?>
-	<div class="card-footer">
-                <div class="row">
-	
-	<?php    	echo form_submit('submit', $button , array('class'=>'btn btn-flat btn-primary'));
+			echo form_input($id);
+	    	echo form_submit('submit', $button , array('class'=>'btn btn-flat btn-primary'));
 	        echo anchor('landing','Batal',array('class'=>'btn btn-flat btn-warning')); 
 						?>
 	<?php echo form_close();?>
-	</div>
-                <!-- /.row -->
-              </div>	
-	</div>
+		</div>
 	 </div>
                
     </section>

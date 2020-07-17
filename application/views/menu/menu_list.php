@@ -1,41 +1,42 @@
 
-<?php if(isset($message)){   
-    echo '<div class="alert alert-warning">  
-      <a href="#" class="close" data-dismiss="alert">&times;</a>  
-      '.$message.'
-    </div> '; 
-}  ?>
-<div class="card">
    <!-- Content Header (Page header) -->
-    
+    <section class="content-header">
+      <h1>        
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><?php echo anchor('dashboard','<i class="fa fa-dashboard"></i> Beranda</a>')?></li>
+      </ol>
+    </section>
 <!-- Main content -->
     <section class="content">
-	
+	<?php if(isset($message)){   
+		 echo '<div class="alert alert-warning">  
+		   <a href="#" class="close" data-dismiss="alert">&times;</a>  
+		   '.$message.'
+		 </div>';
+    }  ?>
       <!-- Default box -->
-      
-        <div class="card-header">
-		 <h5 class="card-title">Daftar menu </h5>	
-		</div>
-            <div class="card-body table-responsive">
-            <div class="box-tools pull-right">            
-                <?php echo anchor(site_url('menu/create'), '<i class = "fa fa-plus"></i> Tambah', 'class="btn btn-flat btn-info"'); ?>
-		<?php echo anchor(site_url('menu/excel'), '<i class = "fa fa-file-excel-o"></i> Excel', 'class="btn btn-flat btn-success"'); ?>
-		<?php echo anchor(site_url('menu/word'), '<i class = "fa fa-file-word-o"></i> Word', 'class="btn btn-flat btn-primary"'); ?>
-		<?php echo anchor(site_url('menu/pdf'), '<i class = "fa fa-file-pdf-o"></i> PDF', 'class="btn btn-flat btn-danger"'); ?>
+      <div class="box">
+        <div class="box-header">
+		 <h3 class="box-title">Daftar menu </h3><hr />	
+			<div class="box-tools pull-right">            
+                <?php echo anchor(site_url('menu/create'), '<i class = "fa fa-plus"></i> Tambah Data', 'class="btn btn-flat btn-info"'); ?>
 	   
-            </div>
-            <div style="margin-bottom:20px"> <hr> </div>
-        <table class="table table-responsive table-bordered table-striped" id="myTable">
+			</div>
+		</div>
+            <div class="box-body">
+        <table class="table table-bordered table-striped" id="myTable">
             <thead>
                 <tr>
-                    <th width="20px">No</th>
+                    <th width="80px">No</th>
 			    	<th>Parent Menu</th>
 			    	<th>Nama Menu</th>
 			    	<th>Controller Link</th>
 			    	<th>Icon</th>
 			    	<th>Slug</th>
 			    	<th>Urut Menu</th>
-			    	<th>Menu Grup User</th>
+			    	<th>Menu Users</th>
 			    	<th>Is Active</th>
 			    	<th width="200px">Aksi</th>
                 </tr>

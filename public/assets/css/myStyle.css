@@ -1,0 +1,37 @@
+.info-panel {
+    box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+}
+
+.card:hover {
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
+    transition: 0.5s;
+}
+
+.berita .card:hover {
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
+    transition: 0.5s;
+}
+
+.btn-warning {
+    background-color: #FF8C00;
+    border-radius: 40px;
+}
+
+.btn-warning:hover {
+    background-color: rgb(247, 160, 55);
+}
+
+.btn-warning:active {
+    background-color: #FF8C00;
+}
+
+nav .navbar-brand span {
+    margin-left: 100px !important;
+    margin-top: 100px !important;
+}
+
+section.about button.btn {
+    width: 145px;
+    margin: 5px;
+}
